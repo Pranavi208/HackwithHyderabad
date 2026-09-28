@@ -1,0 +1,355 @@
+[
+ {
+  "id": "checkout-api",
+  "name": "Checkout API",
+  "tier": 1,
+  "team": "Checkout",
+  "channel": "#inc-checkout-api",
+  "oncall": [
+   "Arjun Rao",
+   "Meera Iyer",
+   "Kabir Shah",
+   "Divya Nair"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 400,
+   "error_rate": 0.01
+  },
+  "description": "Cart-to-payment orchestration for 3.2M daily orders",
+  "dependencies": [
+   "orders-db",
+   "session-cache",
+   "payments-gateway",
+   "upi-switch"
+  ],
+  "external": [],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/checkout-api",
+  "runbooks": [
+   "Rollback: kubectl rollout undo deployment/checkout-api -n production",
+   "Kill switch: flagctl set <flag> off --env prod"
+  ]
+ },
+ {
+  "id": "upi-switch",
+  "name": "UPI Switch",
+  "tier": 1,
+  "team": "Payments Core",
+  "channel": "#inc-upi-switch",
+  "oncall": [
+   "Sandeep Gupta",
+   "Pooja Bhat",
+   "Nikhil Das"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 1500,
+   "error_rate": 0.03
+  },
+  "description": "UPI collect/intent routing to NPCI and partner PSP banks",
+  "dependencies": [],
+  "external": [
+   "NPCI UPI",
+   "PSP bank: Axis",
+   "PSP bank: Yes Bank"
+  ],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/upi-switch",
+  "runbooks": [
+   "Check NPCI status: https://status.npci.internal-mirror",
+   "Post status page update for UPI"
+  ]
+ },
+ {
+  "id": "payments-gateway",
+  "name": "Payments Gateway",
+  "tier": 1,
+  "team": "Payments Core",
+  "channel": "#inc-payments-gateway",
+  "oncall": [
+   "Pooja Bhat",
+   "Nikhil Das",
+   "Sandeep Gupta"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 1200,
+   "error_rate": 0.02
+  },
+  "description": "Card and netbanking authorisation, 3-D Secure",
+  "dependencies": [],
+  "external": [
+   "Visa/Mastercard networks",
+   "Issuer ACS: SBI",
+   "Issuer ACS: ICICI"
+  ],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/payments-gateway",
+  "runbooks": []
+ },
+ {
+  "id": "ledger-service",
+  "name": "Ledger Service",
+  "tier": 1,
+  "team": "Ledger & Recon",
+  "channel": "#inc-ledger-service",
+  "oncall": [
+   "Revathi S",
+   "Imran Khan",
+   "Gaurav Jain"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 600,
+   "error_rate": 0.005
+  },
+  "description": "Double-entry ledger and daily settlement reconciliation with partner banks",
+  "dependencies": [
+   "orders-db",
+   "kafka-events"
+  ],
+  "external": [],
+  "jobs": [
+   {
+    "name": "EOD settlement reconciliation",
+    "start": "23:30",
+    "minutes": 40,
+    "days": "daily"
+   }
+  ],
+  "dashboards": "https://grafana.paysetu.internal/d/ledger-service",
+  "runbooks": []
+ },
+ {
+  "id": "orders-db",
+  "name": "Orders DB (Postgres)",
+  "tier": 1,
+  "team": "Data Platform",
+  "channel": "#inc-orders-db",
+  "oncall": [
+   "Karthik Subramanian",
+   "Neha Joshi",
+   "Amit Patel"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 50,
+   "error_rate": 0.001
+  },
+  "description": "Primary Postgres 15 cluster (1 primary, 2 replicas) behind pgbouncer",
+  "dependencies": [],
+  "external": [],
+  "jobs": [
+   {
+    "name": "nightly pg_basebackup",
+    "start": "02:00",
+    "minutes": 50,
+    "days": "daily"
+   },
+   {
+    "name": "finance reporting export",
+    "start": "15:00",
+    "minutes": 30,
+    "days": "daily"
+   }
+  ],
+  "dashboards": "https://grafana.paysetu.internal/d/orders-db",
+  "runbooks": [
+   "pgbouncer: systemctl restart pgbouncer (rolling, one node at a time)"
+  ]
+ },
+ {
+  "id": "session-cache",
+  "name": "Session Cache (Redis)",
+  "tier": 1,
+  "team": "Platform",
+  "channel": "#inc-session-cache",
+  "oncall": [
+   "Rahul Verma",
+   "Swati Mishra",
+   "Joseph Thomas"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 20,
+   "error_rate": 0.005
+  },
+  "description": "Redis cluster for sessions and cart state",
+  "dependencies": [],
+  "external": [],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/session-cache",
+  "runbooks": [
+   "Scale: kubectl scale statefulset/session-cache --replicas=<n>"
+  ]
+ },
+ {
+  "id": "auth-service",
+  "name": "Auth Service",
+  "tier": 1,
+  "team": "Identity",
+  "channel": "#inc-auth-service",
+  "oncall": [
+   "Priya Raman",
+   "Aditya Kumar",
+   "Zoya Ahmed"
+  ],
+  "slo": {
+   "availability": 99.95,
+   "p99_ms": 300,
+   "error_rate": 0.01
+  },
+  "description": "Login, OTP and JWT issuance",
+  "dependencies": [],
+  "external": [],
+  "jobs": [
+   {
+    "name": "JWKS signing-key rotation",
+    "start": "04:00",
+    "minutes": 10,
+    "days": [
+     "Sun"
+    ]
+   }
+  ],
+  "dashboards": "https://grafana.paysetu.internal/d/auth-service",
+  "runbooks": []
+ },
+ {
+  "id": "kafka-events",
+  "name": "Kafka Event Bus",
+  "tier": 2,
+  "team": "Data Platform",
+  "channel": "#inc-kafka-events",
+  "oncall": [
+   "Neha Joshi",
+   "Amit Patel",
+   "Karthik Subramanian"
+  ],
+  "slo": {
+   "availability": 99.9,
+   "p99_ms": 200,
+   "error_rate": 0.01
+  },
+  "description": "Kafka cluster; payment, order and ledger event topics",
+  "dependencies": [],
+  "external": [],
+  "jobs": [
+   {
+    "name": "EOD batch settlement publish",
+    "start": "22:45",
+    "minutes": 70,
+    "days": "daily"
+   }
+  ],
+  "dashboards": "https://grafana.paysetu.internal/d/kafka-events",
+  "runbooks": []
+ },
+ {
+  "id": "notification-service",
+  "name": "Notification Service",
+  "tier": 2,
+  "team": "Engagement",
+  "channel": "#inc-notification-service",
+  "oncall": [
+   "Tanvi Shah",
+   "Manoj Pillai",
+   "Ritu Singh"
+  ],
+  "slo": {
+   "availability": 99.9,
+   "p99_ms": 2000,
+   "error_rate": 0.02
+  },
+  "description": "SMS/OTP, email and push notifications",
+  "dependencies": [],
+  "external": [
+   "SMS provider: MsgBharat (primary)",
+   "SMS provider: TextNova (secondary)"
+  ],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/notification-service",
+  "runbooks": []
+ },
+ {
+  "id": "search-service",
+  "name": "Search Service",
+  "tier": 2,
+  "team": "Discovery",
+  "channel": "#inc-search-service",
+  "oncall": [
+   "Varun Nair",
+   "Isha Kapoor",
+   "Deepak Rao"
+  ],
+  "slo": {
+   "availability": 99.9,
+   "p99_ms": 350,
+   "error_rate": 0.01
+  },
+  "description": "Elasticsearch-backed merchant and product search",
+  "dependencies": [],
+  "external": [],
+  "jobs": [
+   {
+    "name": "catalog full reindex",
+    "start": "03:00",
+    "minutes": 45,
+    "days": "daily"
+   }
+  ],
+  "dashboards": "https://grafana.paysetu.internal/d/search-service",
+  "runbooks": []
+ },
+ {
+  "id": "kyc-service",
+  "name": "KYC Service",
+  "tier": 2,
+  "team": "Onboarding",
+  "channel": "#inc-kyc-service",
+  "oncall": [
+   "Shreya Ghosh",
+   "Mohit Agarwal",
+   "Anjali Menon"
+  ],
+  "slo": {
+   "availability": 99.9,
+   "p99_ms": 3000,
+   "error_rate": 0.02
+  },
+  "description": "Aadhaar eKYC, DigiLocker document fetch, video KYC",
+  "dependencies": [],
+  "external": [
+   "DigiLocker API",
+   "UIDAI eKYC"
+  ],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/kyc-service",
+  "runbooks": []
+ },
+ {
+  "id": "merchant-dashboard",
+  "name": "Merchant Dashboard",
+  "tier": 3,
+  "team": "Merchant Experience",
+  "channel": "#inc-merchant-dashboard",
+  "oncall": [
+   "Kiran Babu",
+   "Sana Mirza"
+  ],
+  "slo": {
+   "availability": 99.9,
+   "p99_ms": 800,
+   "error_rate": 0.02
+  },
+  "description": "Web dashboard for 400k merchants, served via CDN",
+  "dependencies": [],
+  "external": [
+   "CDN edge"
+  ],
+  "jobs": [],
+  "dashboards": "https://grafana.paysetu.internal/d/merchant-dashboard",
+  "runbooks": []
+ }
+]

@@ -1,0 +1,2112 @@
+[
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-01T10:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 90.7% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.093,
+   "p99_ms": 2370,
+   "saturation": 0.5,
+   "burn_rate": 17.9,
+   "affected_users_pct": 13.0,
+   "failed_txn_per_min": 2806
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Yes Bank handles"
+  ],
+  "date": "2026-09-01",
+  "day": 1,
+  "id": "INC-0901-01"
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-09-01T23:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "3196 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 3214
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "upi-switch",
+    "ref": "upi-switch v4.21.0",
+    "at": "2026-09-01T22:55",
+    "team": "Payments Core"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "date": "2026-09-01",
+  "day": 1,
+  "id": "INC-0901-02"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-02T02:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 103s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 103,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-02",
+  "day": 2,
+  "id": "INC-0902-01"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-02T11:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 8.2% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.082,
+   "p99_ms": 684,
+   "saturation": 0.55,
+   "burn_rate": 37.2,
+   "affected_users_pct": 25.3,
+   "failed_txn_per_min": 1696
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.44.0",
+    "at": "2026-09-02T11:01",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.44.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "date": "2026-09-02",
+  "day": 2,
+  "id": "INC-0902-02"
+ },
+ {
+  "service_id": "payments-gateway",
+  "started_at": "2026-09-03T12:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CardAuthTimeouts",
+   "source": "Datadog",
+   "summary": "3-D Secure timeouts 6.4% on ICICI cards"
+  },
+  "metrics": {
+   "error_rate": 0.064,
+   "p99_ms": 5039,
+   "saturation": 0.5,
+   "burn_rate": 10.8,
+   "affected_users_pct": 5.2,
+   "failed_txn_per_min": 228
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "Visa/Mastercard networks",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: SBI",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: ICICI",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN ACS ICICI p99 8.4s, timeouts after 10s",
+   "INFO other issuers healthy"
+  ],
+  "date": "2026-09-03",
+  "day": 3,
+  "id": "INC-0903-01"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-03T23:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 379,394 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.93,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 379394,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "date": "2026-09-03",
+  "day": 3,
+  "id": "INC-0903-02"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-04T13:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 4.1% on /v2/checkout/confirm"
+  },
+  "metrics": {
+   "error_rate": 0.041,
+   "p99_ms": 502,
+   "saturation": 0.5,
+   "burn_rate": 12.3,
+   "affected_users_pct": 7.8,
+   "failed_txn_per_min": 643
+  },
+  "recent_changes": [
+   {
+    "type": "flag",
+    "service": "checkout-api",
+    "ref": "one_click_upi -> 25%",
+    "at": "2026-09-04T12:51",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR FlagEvaluator: one_click_upi enabled for 25% cohort; handler ConfirmV3 returned 500",
+   "INFO no deploys on checkout-api in the last 6h"
+  ],
+  "date": "2026-09-04",
+  "day": 4,
+  "id": "INC-0904-01"
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-09-04T20:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 93% of maxmemory, evictions 6k/s"
+  },
+  "metrics": {
+   "error_rate": 0.015,
+   "p99_ms": 41,
+   "saturation": 0.93,
+   "burn_rate": 0.0,
+   "affected_users_pct": 5.4,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "merchant-dashboard",
+    "ref": "merchant-dashboard v9.15.0",
+    "at": "2026-09-04T19:23",
+    "team": "Merchant Experience"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "date": "2026-09-04",
+  "day": 4,
+  "id": "INC-0904-02"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-05T02:25",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 199s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 199,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-05",
+  "day": 5,
+  "id": "INC-0905-01"
+ },
+ {
+  "service_id": "notification-service",
+  "started_at": "2026-09-05T10:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "OTPDeliveryFailures",
+   "source": "Datadog",
+   "summary": "SMS OTP delivery failure 22% on primary provider"
+  },
+  "metrics": {
+   "error_rate": 0.215,
+   "p99_ms": 5757,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 4.9
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "SMS provider: MsgBharat (primary)",
+    "status": "degraded"
+   },
+   {
+    "name": "SMS provider: TextNova (secondary)",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN MsgBharat HTTP 429 Too Many Requests",
+   "INFO TextNova (secondary) healthy"
+  ],
+  "date": "2026-09-05",
+  "day": 5,
+  "id": "INC-0905-02"
+ },
+ {
+  "service_id": "search-service",
+  "started_at": "2026-09-06T03:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ESHeapPressure",
+   "source": "Prometheus",
+   "summary": "es-data-3 JVM heap 93%, search p99 1451 ms"
+  },
+  "metrics": {
+   "error_rate": 0.007,
+   "p99_ms": 1685,
+   "saturation": 0.93,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.7,
+   "saturation_resource": "JVM heap"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN [gc][old] es-data-3 spent 4.2s in GC",
+   "INFO catalog full reindex running"
+  ],
+  "date": "2026-09-06",
+  "day": 6,
+  "id": "INC-0906-01"
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-09-06T04:02",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 2.7% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.027,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.4
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "session-cache",
+    "ref": "session-cache v5.69.0",
+    "at": "2026-09-06T03:37",
+    "team": "Platform"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "date": "2026-09-06",
+  "day": 6,
+  "id": "INC-0906-02"
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-07T18:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 90.9% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.091,
+   "p99_ms": 1871,
+   "saturation": 0.5,
+   "burn_rate": 8.7,
+   "affected_users_pct": 12.7,
+   "failed_txn_per_min": 3064
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Axis handles"
+  ],
+  "date": "2026-09-07",
+  "day": 7,
+  "id": "INC-0907-01"
+ },
+ {
+  "service_id": "kyc-service",
+  "started_at": "2026-09-08T11:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KYCVendorTimeouts",
+   "source": "Datadog",
+   "summary": "DigiLocker fetch timeouts 47%"
+  },
+  "metrics": {
+   "error_rate": 0.47,
+   "p99_ms": 11319,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.2
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "DigiLocker API",
+    "status": "degraded"
+   },
+   {
+    "name": "UIDAI eKYC",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN DigiLocker /pull-doc 504 gateway timeout",
+   "INFO UIDAI eKYC healthy"
+  ],
+  "date": "2026-09-08",
+  "day": 8,
+  "id": "INC-0908-01"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-08T15:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PgbouncerPoolExhausted",
+   "source": "Prometheus",
+   "summary": "pgbouncer client wait queue 843, pool 97% used"
+  },
+  "metrics": {
+   "error_rate": 0.026,
+   "p99_ms": 2400,
+   "saturation": 0.97,
+   "burn_rate": 28.6,
+   "affected_users_pct": 8.2,
+   "saturation_resource": "pgbouncer pool"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN pgbouncer: no more connections allowed (max_client_conn)",
+   "INFO long-running queries from role finance_report on primary (SELECT ... FROM orders JOIN ...)"
+  ],
+  "date": "2026-09-08",
+  "day": 8,
+  "id": "INC-0908-02"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-09T14:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 7.0% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.07,
+   "p99_ms": 510,
+   "saturation": 0.55,
+   "burn_rate": 39.6,
+   "affected_users_pct": 14.2,
+   "failed_txn_per_min": 1029
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.45.0",
+    "at": "2026-09-09T14:31",
+    "team": "Checkout"
+   },
+   {
+    "type": "deploy",
+    "service": "merchant-dashboard",
+    "ref": "merchant-dashboard v7.48.0",
+    "at": "2026-09-09T14:15",
+    "team": "Merchant Experience"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.45.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "date": "2026-09-09",
+  "day": 9,
+  "id": "INC-0909-01"
+ },
+ {
+  "service_id": "merchant-dashboard",
+  "started_at": "2026-09-09T18:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Origin504Spike",
+   "source": "CDN logs",
+   "summary": "Origin 504s 3.1% after cache purge"
+  },
+  "metrics": {
+   "error_rate": 0.031,
+   "p99_ms": 2100,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.2
+  },
+  "recent_changes": [
+   {
+    "type": "config",
+    "service": "merchant-dashboard",
+    "ref": "CDN full purge",
+    "at": "2026-09-09T17:57",
+    "team": "Merchant Experience"
+   }
+  ],
+  "dependencies": [
+   {
+    "name": "CDN edge",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO full cache purge by release pipeline",
+   "WARN origin cold, cache hit ratio 41%"
+  ],
+  "date": "2026-09-09",
+  "day": 9,
+  "id": "INC-0909-02"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-10T02:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 90s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 90,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-10",
+  "day": 10,
+  "id": "INC-0910-01"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-10T23:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 409,299 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.89,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 409299,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "date": "2026-09-10",
+  "day": 10,
+  "id": "INC-0910-02"
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-09-11T20:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 94% of maxmemory, evictions 4k/s"
+  },
+  "metrics": {
+   "error_rate": 0.016,
+   "p99_ms": 40,
+   "saturation": 0.94,
+   "burn_rate": 0.0,
+   "affected_users_pct": 3.1,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "date": "2026-09-11",
+  "day": 11,
+  "id": "INC-0911-01"
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-09-11T23:45",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "2484 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 2139
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "payments-gateway",
+    "ref": "payments-gateway v9.40.0",
+    "at": "2026-09-11T23:21",
+    "team": "Payments Core"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "date": "2026-09-11",
+  "day": 11,
+  "id": "INC-0911-02"
+ },
+ {
+  "service_id": "search-service",
+  "started_at": "2026-09-12T03:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ESHeapPressure",
+   "source": "Prometheus",
+   "summary": "es-data-3 JVM heap 94%, search p99 1035 ms"
+  },
+  "metrics": {
+   "error_rate": 0.007,
+   "p99_ms": 1654,
+   "saturation": 0.94,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.7,
+   "saturation_resource": "JVM heap"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN [gc][old] es-data-3 spent 4.2s in GC",
+   "INFO catalog full reindex running"
+  ],
+  "date": "2026-09-12",
+  "day": 12,
+  "id": "INC-0912-01"
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-12T20:45",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 91.8% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.082,
+   "p99_ms": 1852,
+   "saturation": 0.5,
+   "burn_rate": 10.3,
+   "affected_users_pct": 11.5,
+   "failed_txn_per_min": 3280
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Yes Bank handles"
+  ],
+  "date": "2026-09-12",
+  "day": 12,
+  "id": "INC-0912-02"
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-09-13T04:03",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 2.8% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.028,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.5
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "date": "2026-09-13",
+  "day": 13,
+  "id": "INC-0913-01"
+ },
+ {
+  "service_id": "notification-service",
+  "started_at": "2026-09-14T19:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "OTPDeliveryFailures",
+   "source": "Datadog",
+   "summary": "SMS OTP delivery failure 22% on primary provider"
+  },
+  "metrics": {
+   "error_rate": 0.216,
+   "p99_ms": 7882,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 3.0
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "search-service",
+    "ref": "search-service v9.76.0",
+    "at": "2026-09-14T18:55",
+    "team": "Discovery"
+   }
+  ],
+  "dependencies": [
+   {
+    "name": "SMS provider: MsgBharat (primary)",
+    "status": "degraded"
+   },
+   {
+    "name": "SMS provider: TextNova (secondary)",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN MsgBharat HTTP 429 Too Many Requests",
+   "INFO TextNova (secondary) healthy"
+  ],
+  "date": "2026-09-14",
+  "day": 14,
+  "id": "INC-0914-01"
+ },
+ {
+  "service_id": "payments-gateway",
+  "started_at": "2026-09-14T21:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CardAuthTimeouts",
+   "source": "Datadog",
+   "summary": "3-D Secure timeouts 5.0% on SBI cards"
+  },
+  "metrics": {
+   "error_rate": 0.05,
+   "p99_ms": 6616,
+   "saturation": 0.5,
+   "burn_rate": 11.4,
+   "affected_users_pct": 3.7,
+   "failed_txn_per_min": 190
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "Visa/Mastercard networks",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: SBI",
+    "status": "degraded"
+   },
+   {
+    "name": "Issuer ACS: ICICI",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN ACS SBI p99 8.4s, timeouts after 10s",
+   "INFO other issuers healthy"
+  ],
+  "date": "2026-09-14",
+  "day": 14,
+  "id": "INC-0914-02"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-15T02:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 105s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 105,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-15",
+  "day": 15,
+  "id": "INC-0915-01"
+ },
+ {
+  "service_id": "kyc-service",
+  "started_at": "2026-09-15T16:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KYCVendorTimeouts",
+   "source": "Datadog",
+   "summary": "DigiLocker fetch timeouts 44%"
+  },
+  "metrics": {
+   "error_rate": 0.44,
+   "p99_ms": 13056,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 1.0
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "DigiLocker API",
+    "status": "degraded"
+   },
+   {
+    "name": "UIDAI eKYC",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN DigiLocker /pull-doc 504 gateway timeout",
+   "INFO UIDAI eKYC healthy"
+  ],
+  "date": "2026-09-15",
+  "day": 15,
+  "id": "INC-0915-02"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-16T17:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 5.3% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.053,
+   "p99_ms": 722,
+   "saturation": 0.55,
+   "burn_rate": 33.5,
+   "affected_users_pct": 20.6,
+   "failed_txn_per_min": 914
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.46.0",
+    "at": "2026-09-16T16:58",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.46.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "date": "2026-09-16",
+  "day": 16,
+  "id": "INC-0916-01"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-16T17:17",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 5.3% over 5m on checkout-api (re-fired)"
+  },
+  "metrics": {
+   "error_rate": 0.053,
+   "p99_ms": 722,
+   "saturation": 0.55,
+   "burn_rate": 33.5,
+   "affected_users_pct": 20.6,
+   "failed_txn_per_min": 914
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.46.0",
+    "at": "2026-09-16T16:58",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO alertmanager re-notified: group_interval elapsed",
+   "ERROR checkout-api v2.46.0 NullPointerException in PromoResolver.apply (cart without promo)"
+  ],
+  "date": "2026-09-16",
+  "day": 16,
+  "id": "INC-0916-02"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-16T22:55",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 360,782 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.89,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 360782,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "date": "2026-09-16",
+  "day": 16,
+  "id": "INC-0916-03"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-17T15:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PgbouncerPoolExhausted",
+   "source": "Prometheus",
+   "summary": "pgbouncer client wait queue 723, pool 98% used"
+  },
+  "metrics": {
+   "error_rate": 0.058,
+   "p99_ms": 1984,
+   "saturation": 0.98,
+   "burn_rate": 22.8,
+   "affected_users_pct": 13.8,
+   "saturation_resource": "pgbouncer pool"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN pgbouncer: no more connections allowed (max_client_conn)",
+   "INFO long-running queries from role finance_report on primary (SELECT ... FROM orders JOIN ...)"
+  ],
+  "date": "2026-09-17",
+  "day": 17,
+  "id": "INC-0917-01"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-18T19:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 3.4% on /v2/checkout/confirm"
+  },
+  "metrics": {
+   "error_rate": 0.034,
+   "p99_ms": 406,
+   "saturation": 0.5,
+   "burn_rate": 26.4,
+   "affected_users_pct": 9.6,
+   "failed_txn_per_min": 505
+  },
+  "recent_changes": [
+   {
+    "type": "flag",
+    "service": "checkout-api",
+    "ref": "emi_offers_v2 -> 25%",
+    "at": "2026-09-18T19:33",
+    "team": "Checkout"
+   },
+   {
+    "type": "deploy",
+    "service": "auth-service",
+    "ref": "auth-service v2.66.0",
+    "at": "2026-09-18T19:21",
+    "team": "Identity"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR FlagEvaluator: emi_offers_v2 enabled for 25% cohort; handler ConfirmV3 returned 500",
+   "INFO no deploys on checkout-api in the last 6h"
+  ],
+  "date": "2026-09-18",
+  "day": 18,
+  "id": "INC-0918-01"
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-09-18T20:02",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 95% of maxmemory, evictions 4k/s"
+  },
+  "metrics": {
+   "error_rate": 0.006,
+   "p99_ms": 44,
+   "saturation": 0.95,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.8,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "date": "2026-09-18",
+  "day": 18,
+  "id": "INC-0918-02"
+ },
+ {
+  "service_id": "search-service",
+  "started_at": "2026-09-19T03:25",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ESHeapPressure",
+   "source": "Prometheus",
+   "summary": "es-data-3 JVM heap 96%, search p99 1231 ms"
+  },
+  "metrics": {
+   "error_rate": 0.004,
+   "p99_ms": 1556,
+   "saturation": 0.96,
+   "burn_rate": 0.0,
+   "affected_users_pct": 1.3,
+   "saturation_resource": "JVM heap"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN [gc][old] es-data-3 spent 4.2s in GC",
+   "INFO catalog full reindex running"
+  ],
+  "date": "2026-09-19",
+  "day": 19,
+  "id": "INC-0919-01"
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-19T09:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 92.6% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.074,
+   "p99_ms": 2492,
+   "saturation": 0.5,
+   "burn_rate": 13.4,
+   "affected_users_pct": 10.4,
+   "failed_txn_per_min": 3036
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Axis handles"
+  ],
+  "date": "2026-09-19",
+  "day": 19,
+  "id": "INC-0919-02"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-20T02:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 212s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 212,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-20",
+  "day": 20,
+  "id": "INC-0920-01"
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-09-20T04:01",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 2.8% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.028,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.8
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "date": "2026-09-20",
+  "day": 20,
+  "id": "INC-0920-02"
+ },
+ {
+  "service_id": "notification-service",
+  "started_at": "2026-09-21T08:50",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "OTPDeliveryFailures",
+   "source": "Datadog",
+   "summary": "SMS OTP delivery failure 17% on primary provider"
+  },
+  "metrics": {
+   "error_rate": 0.174,
+   "p99_ms": 7953,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.9
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "SMS provider: MsgBharat (primary)",
+    "status": "degraded"
+   },
+   {
+    "name": "SMS provider: TextNova (secondary)",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN MsgBharat HTTP 429 Too Many Requests",
+   "INFO TextNova (secondary) healthy"
+  ],
+  "date": "2026-09-21",
+  "day": 21,
+  "id": "INC-0921-01"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-21T14:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 2,900,000 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.02,
+   "p99_ms": 400,
+   "saturation": 0.91,
+   "burn_rate": 0.0,
+   "affected_users_pct": 3.0,
+   "consumer_lag": 2900000,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR ledger-consumer poison message offset 88123311: deserialization failed, retrying",
+   "INFO no batch job scheduled at this time"
+  ],
+  "date": "2026-09-21",
+  "day": 21,
+  "id": "INC-0921-02"
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-22T14:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 57.8% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.422,
+   "p99_ms": 3100,
+   "saturation": 0.5,
+   "burn_rate": 84.0,
+   "affected_users_pct": 58.0,
+   "failed_txn_per_min": 21800
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": true,
+  "support_tickets": 740,
+  "data_integrity": null,
+  "logs": [
+   "ERROR HSM sign() timeout after 2000ms",
+   "INFO NPCI response codes normal; failures are internal U16"
+  ],
+  "date": "2026-09-22",
+  "day": 22,
+  "id": "INC-0922-01"
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-09-22T23:38",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "3590 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 2617
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "date": "2026-09-22",
+  "day": 22,
+  "id": "INC-0922-02"
+ },
+ {
+  "service_id": "payments-gateway",
+  "started_at": "2026-09-23T11:45",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CardAuthTimeouts",
+   "source": "Datadog",
+   "summary": "3-D Secure timeouts 7.3% on ICICI cards"
+  },
+  "metrics": {
+   "error_rate": 0.073,
+   "p99_ms": 8097,
+   "saturation": 0.5,
+   "burn_rate": 6.8,
+   "affected_users_pct": 6.2,
+   "failed_txn_per_min": 240
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "upi-switch",
+    "ref": "upi-switch v7.16.0",
+    "at": "2026-09-23T11:30",
+    "team": "Payments Core"
+   }
+  ],
+  "dependencies": [
+   {
+    "name": "Visa/Mastercard networks",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: SBI",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: ICICI",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN ACS ICICI p99 8.4s, timeouts after 10s",
+   "INFO other issuers healthy"
+  ],
+  "date": "2026-09-23",
+  "day": 23,
+  "id": "INC-0923-01"
+ },
+ {
+  "service_id": "merchant-dashboard",
+  "started_at": "2026-09-23T15:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Origin504Spike",
+   "source": "CDN logs",
+   "summary": "Origin 504s 3.1% after cache purge"
+  },
+  "metrics": {
+   "error_rate": 0.031,
+   "p99_ms": 2100,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 1.1
+  },
+  "recent_changes": [
+   {
+    "type": "config",
+    "service": "merchant-dashboard",
+    "ref": "CDN full purge",
+    "at": "2026-09-23T15:23",
+    "team": "Merchant Experience"
+   },
+   {
+    "type": "deploy",
+    "service": "auth-service",
+    "ref": "auth-service v2.21.0",
+    "at": "2026-09-23T14:40",
+    "team": "Identity"
+   }
+  ],
+  "dependencies": [
+   {
+    "name": "CDN edge",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO full cache purge by release pipeline",
+   "WARN origin cold, cache hit ratio 41%"
+  ],
+  "date": "2026-09-23",
+  "day": 23,
+  "id": "INC-0923-02"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-23T23:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 419,665 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.9,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 419665,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "date": "2026-09-23",
+  "day": 23,
+  "id": "INC-0923-03"
+ },
+ {
+  "service_id": "kyc-service",
+  "started_at": "2026-09-24T12:25",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KYCVendorTimeouts",
+   "source": "Datadog",
+   "summary": "DigiLocker fetch timeouts 35%"
+  },
+  "metrics": {
+   "error_rate": 0.35,
+   "p99_ms": 11915,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.7
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "DigiLocker API",
+    "status": "degraded"
+   },
+   {
+    "name": "UIDAI eKYC",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN DigiLocker /pull-doc 504 gateway timeout",
+   "INFO UIDAI eKYC healthy"
+  ],
+  "date": "2026-09-24",
+  "day": 24,
+  "id": "INC-0924-01"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-24T12:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 8.6% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.086,
+   "p99_ms": 774,
+   "saturation": 0.55,
+   "burn_rate": 35.9,
+   "affected_users_pct": 25.3,
+   "failed_txn_per_min": 1272
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.47.0",
+    "at": "2026-09-24T12:10",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.47.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "date": "2026-09-24",
+  "day": 24,
+  "id": "INC-0924-02"
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-09-25T13:50",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 91.0% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.09,
+   "p99_ms": 2530,
+   "saturation": 0.5,
+   "burn_rate": 16.3,
+   "affected_users_pct": 12.6,
+   "failed_txn_per_min": 3924
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Yes Bank handles"
+  ],
+  "date": "2026-09-25",
+  "day": 25,
+  "id": "INC-0925-01"
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-09-25T20:08",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 91% of maxmemory, evictions 6k/s"
+  },
+  "metrics": {
+   "error_rate": 0.018,
+   "p99_ms": 41,
+   "saturation": 0.91,
+   "burn_rate": 0.0,
+   "affected_users_pct": 3.8,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "date": "2026-09-25",
+  "day": 25,
+  "id": "INC-0925-02"
+ },
+ {
+  "service_id": "search-service",
+  "started_at": "2026-09-26T03:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ESHeapPressure",
+   "source": "Prometheus",
+   "summary": "es-data-3 JVM heap 94%, search p99 1023 ms"
+  },
+  "metrics": {
+   "error_rate": 0.007,
+   "p99_ms": 1087,
+   "saturation": 0.94,
+   "burn_rate": 0.0,
+   "affected_users_pct": 1.0,
+   "saturation_resource": "JVM heap"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN [gc][old] es-data-3 spent 4.2s in GC",
+   "INFO catalog full reindex running"
+  ],
+  "date": "2026-09-26",
+  "day": 26,
+  "id": "INC-0926-01"
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-09-26T16:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 4.5% on /v2/checkout/confirm"
+  },
+  "metrics": {
+   "error_rate": 0.045,
+   "p99_ms": 503,
+   "saturation": 0.5,
+   "burn_rate": 14.8,
+   "affected_users_pct": 9.4,
+   "failed_txn_per_min": 402
+  },
+  "recent_changes": [
+   {
+    "type": "flag",
+    "service": "checkout-api",
+    "ref": "smart_retry -> 25%",
+    "at": "2026-09-26T15:59",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR FlagEvaluator: smart_retry enabled for 25% cohort; handler ConfirmV3 returned 500",
+   "INFO no deploys on checkout-api in the last 6h"
+  ],
+  "date": "2026-09-26",
+  "day": 26,
+  "id": "INC-0926-02"
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-09-26T23:42",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconMismatch",
+   "source": "Prometheus",
+   "summary": "Reconciliation mismatches detected against partner bank settlement"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 320,
+   "saturation": 0.72,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 2100
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "merchant-dashboard",
+    "ref": "merchant-dashboard v8.58.0",
+    "at": "2026-09-26T23:23",
+    "team": "Merchant Experience"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": {
+   "mismatch_count": 312,
+   "amount_inr": 4870500
+  },
+  "logs": [
+   "ERROR 312 entries: ledger amount != bank settlement amount",
+   "INFO EOD settlement file arrived 23:36"
+  ],
+  "date": "2026-09-26",
+  "day": 26,
+  "id": "INC-0926-03"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-27T02:35",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 224s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 224,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "date": "2026-09-27",
+  "day": 27,
+  "id": "INC-0927-01"
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-09-27T04:04",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 3.1% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.031,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.5
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "date": "2026-09-27",
+  "day": 27,
+  "id": "INC-0927-02"
+ },
+ {
+  "service_id": "notification-service",
+  "started_at": "2026-09-28T17:35",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "OTPDeliveryFailures",
+   "source": "Datadog",
+   "summary": "SMS OTP delivery failure 24% on primary provider"
+  },
+  "metrics": {
+   "error_rate": 0.242,
+   "p99_ms": 7401,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 4.2
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "SMS provider: MsgBharat (primary)",
+    "status": "degraded"
+   },
+   {
+    "name": "SMS provider: TextNova (secondary)",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN MsgBharat HTTP 429 Too Many Requests",
+   "INFO TextNova (secondary) healthy"
+  ],
+  "date": "2026-09-28",
+  "day": 28,
+  "id": "INC-0928-01"
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-09-29T15:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PgbouncerPoolExhausted",
+   "source": "Prometheus",
+   "summary": "pgbouncer client wait queue 879, pool 98% used"
+  },
+  "metrics": {
+   "error_rate": 0.047,
+   "p99_ms": 1696,
+   "saturation": 0.98,
+   "burn_rate": 29.0,
+   "affected_users_pct": 8.5,
+   "saturation_resource": "pgbouncer pool"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "kyc-service",
+    "ref": "kyc-service v2.17.0",
+    "at": "2026-09-29T14:25",
+    "team": "Onboarding"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN pgbouncer: no more connections allowed (max_client_conn)",
+   "INFO long-running queries from role finance_report on primary (SELECT ... FROM orders JOIN ...)"
+  ],
+  "date": "2026-09-29",
+  "day": 29,
+  "id": "INC-0929-01"
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-09-30T23:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 364,462 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.86,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 364462,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "date": "2026-09-30",
+  "day": 30,
+  "id": "INC-0930-01"
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-09-30T23:50",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "2005 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 3447
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "kyc-service",
+    "ref": "kyc-service v6.73.0",
+    "at": "2026-09-30T23:03",
+    "team": "Onboarding"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "date": "2026-09-30",
+  "day": 30,
+  "id": "INC-0930-02"
+ }
+]

@@ -1,0 +1,454 @@
+{
+ "resolutions": {
+  "INC-0911-01": {
+   "action": "escalate",
+   "note": "Clear Cache whenever it reaches 90%\n\n",
+   "cause": null,
+   "resolved_by": "on-call",
+   "severity": "SEV3",
+   "decided_at": "2026-09-28T21:47:56",
+   "suggested_action": "escalate",
+   "suggested_confidence": 0.2,
+   "needs_human": true,
+   "memory_enabled": true,
+   "agreed": true,
+   "repeat_flagged": false,
+   "mttr_min": 16,
+   "retained_memory": "On 2026-09-11 at 20:10 IST (Friday), incident INC-0911-01 hit Session Cache (Redis) (session-cache, tier 1, team Platform). Alert RedisMemoryHigh: session-cache used_memory 94% of maxmemory, evictions 4k/s. Severity SEV3; 3.1% of users affected. Signals: SATURATION: Redis memory at 94% (limit 85%); ERROR_RATE: Error rate 1.6% vs SLO threshold 0.5%; LATENCY_SLO: p99 latency 40 ms vs SLO 20 ms. The on-call engineer ESCALATED to a human incident commander / war room in 16 min. Engineer note: Clear Cache whenever it reaches 90%",
+   "status_update": {
+    "subject": "[RESOLVED] Session Cache (Redis) \u2014 session-cache used_memory 94% of maxmemory, evictions 4k/s",
+    "body": "**Resolution**: The incident team is investigating. Clear Cache whenever it reaches 90%\n\n\n**Duration**: 20:10 IST, resolved in 16 min\n**Impact Summary**: 3.1% of users affected at peak.\n**Follow-up**: Blameless post-mortem within 48 hours; action items tracked in #inc-session-cache."
+   }
+  },
+  "INC-0904-02": {
+   "action": "escalate",
+   "note": "While S1-S5 show a similar past incident (INC-0911-01), the current incident occurred despite the existence of action item S6/S7 (clear cache at 90%), and the previous resolution was an escalation (S8) rather than a specific automated fix. The absence of a successful remediation precedent in memory, combined with the known high-traffic trigger, warrants human intervention to verify the cache-clearing mechanism and manage the flash sale load.",
+   "cause": null,
+   "resolved_by": "on-call",
+   "severity": "SEV3",
+   "decided_at": "2026-09-28T21:48:51",
+   "suggested_action": "escalate",
+   "suggested_confidence": 0.6,
+   "needs_human": true,
+   "memory_enabled": true,
+   "agreed": true,
+   "repeat_flagged": true,
+   "mttr_min": 16,
+   "retained_memory": "On 2026-09-04 at 20:05 IST (Friday), incident INC-0904-02 hit Session Cache (Redis) (session-cache, tier 1, team Platform). Alert RedisMemoryHigh: session-cache used_memory 93% of maxmemory, evictions 6k/s. Severity SEV3; 5.4% of users affected. Signals: SATURATION: Redis memory at 93% (limit 85%); ERROR_RATE: Error rate 1.5% vs SLO threshold 0.5%; LATENCY_SLO: p99 latency 41 ms vs SLO 20 ms. The on-call engineer ESCALATED to a human incident commander / war room in 16 min. Engineer note: While S1-S5 show a similar past incident (INC-0911-01), the current incident occurred despite the existence of action item S6/S7 (clear cache at 90%), and the previous resolution was an escalation (S8) rather than a specific automated fix. The absence of a successful remediation precedent in memory, combined with the known high-traffic trigger, warrants human intervention to verify the cache-clearing mechanism and manage the flash sale load.",
+   "status_update": {
+    "subject": "[RESOLVED] Session Cache (Redis) \u2014 session-cache used_memory 93% of maxmemory, evictions 6k/s",
+    "body": "**Resolution**: The incident team is investigating. While S1-S5 show a similar past incident (INC-0911-01), the current incident occurred despite the existence of action item S6/S7 (clear cache at 90%), and the previous resolution was an escalation (S8) rather than a specific automated fix. The absence of a successful remediation precedent in memory, combined with the known high-traffic trigger, warrants human intervention to verify the cache-clearing mechanism and manage the flash sale load.\n**Duration**: 20:05 IST, resolved in 16 min\n**Impact Summary**: 5.4% of users affected at peak.\n**Follow-up**: Blameless post-mortem within 48 hours; action items tracked in #inc-session-cache."
+   }
+  }
+ },
+ "suggestions": {
+  "INC-0901-01": {
+   "action": "escalate",
+   "severity": "SEV3",
+   "confidence": 0.9,
+   "reason": "Both NPCI and Yes Bank are degraded, error rate 9.3% and burn rate 17.9x exceed thresholds",
+   "hypothesis": "NPCI UPI degradation causing increased failures and latency",
+   "runbook": [
+    "Page the incident commander",
+    "Open a war room with Payments Core and infra teams",
+    "Check NPCI status page and open vendor ticket",
+    "Route traffic away from Yes Bank if possible",
+    "Monitor error rate and latency for improvement"
+   ],
+   "repeat": false,
+   "repeat_note": "",
+   "cited_memories": [],
+   "recalled_count": 0,
+   "memory_enabled": true,
+   "model": "openai/gpt-oss-120b",
+   "guardrail": null,
+   "latency_ms": 866,
+   "needs_human": true,
+   "recalled": [],
+   "pattern": [],
+   "status_update": {
+    "subject": "[SEV3] UPI Switch \u2014 UPI success rate 90.7% (baseline 99.2%)",
+    "body": "**Status**: Investigating\n**Impact**: 13% of users (~2,806 failed transactions per minute) affected; upi collect/intent routing to npci and partner psp banks degraded.\n**Current Understanding**: NPCI UPI degradation causing increased failures and latency\n**Actions Taken**: Incident declared SEV3, roles assigned; the incident team is investigating.\n**Next Update**: in 120 min (by 12:05 IST)."
+   },
+   "created_at": "2026-09-28T21:46:32"
+  },
+  "INC-0902-01": {
+   "action": "escalate",
+   "severity": "SEV4",
+   "confidence": 0.7,
+   "reason": "Backup overlaps with replication causing lag beyond threshold; no prior fix patterns exist",
+   "hypothesis": "pg_basebackup job on replica-2 is causing replication lag",
+   "runbook": [
+    "Page the on-call DB engineer",
+    "Investigate pg_basebackup impact on replica-2",
+    "Consider pausing or rescheduling the backup",
+    "Failover traffic to replica-1 if needed",
+    "Monitor replication lag after changes"
+   ],
+   "repeat": false,
+   "repeat_note": "",
+   "cited_memories": [],
+   "recalled_count": 0,
+   "memory_enabled": true,
+   "model": "openai/gpt-oss-120b",
+   "guardrail": null,
+   "latency_ms": 881,
+   "needs_human": true,
+   "recalled": [],
+   "pattern": [],
+   "status_update": {
+    "subject": "[SEV4] Orders DB (Postgres) \u2014 replica-2 replication lag 103s (threshold 60s)",
+    "body": "**Status**: Investigating\n**Impact**: 0% of users affected; primary postgres 15 cluster (1 primary, 2 replicas) behind pgbouncer degraded.\n**Current Understanding**: pg_basebackup job on replica-2 is causing replication lag\n**Actions Taken**: Incident declared SEV4, roles assigned; the incident team is investigating.\n**Next Update**: in 1440 min (by 02:15 IST)."
+   },
+   "created_at": "2026-09-28T21:46:42"
+  },
+  "INC-0901-02": {
+   "action": "escalate",
+   "severity": "SEV4",
+   "confidence": 0.5,
+   "reason": "No cited precedent where 'monitor' resolved a matching incident, so a human IC must decide. The incident started at 23:40, 10 minutes after the 23:30 scheduled job start, and logs confirm active processing with 0 mismatches. With zero user impact, zero error rate, and no relevant precedents, this matches a known self-healing transient pattern associated with scheduled jobs.",
+   "hypothesis": "The alert is a transient spike caused by the scheduled EOD settlement reconciliation job processing a large batch of entries, which is currently within its expected execution window.",
+   "runbook": [
+    "Acknowledge the alert as expected behavior during the EOD reconciliation window.",
+    "Monitor recon_pending count for the next 30 minutes to ensure it trends downward.",
+    "Verify that the reconciliation job completes successfully by 23:50.",
+    "If pending count does not decrease or errors appear, escalate to SEV3."
+   ],
+   "repeat": false,
+   "repeat_note": "",
+   "cited_memories": [],
+   "recalled_count": 0,
+   "memory_enabled": true,
+   "model": "qwen/qwen3.8-27b",
+   "guardrail": "precedent-required",
+   "latency_ms": 720,
+   "needs_human": true,
+   "recalled": [],
+   "pattern": [],
+   "status_update": {
+    "subject": "[SEV4] Ledger Service \u2014 3196 settlement entries pending reconciliation",
+    "body": "**Status**: Investigating\n**Impact**: 0% of users affected; double-entry ledger and daily settlement reconciliation with partner banks degraded.\n**Current Understanding**: The alert is a transient spike caused by the scheduled EOD settlement reconciliation job processing a large batch of entries, which is currently within its expected execution window.\n**Actions Taken**: Incident declared SEV4, roles assigned; the incident team is investigating.\n**Next Update**: in 1440 min (by 23:40 IST)."
+   },
+   "created_at": "2026-09-28T21:46:42"
+  },
+  "INC-0911-01": {
+   "action": "escalate",
+   "severity": "SEV3",
+   "confidence": 0.2,
+   "reason": "No service or pattern memories exist to validate a specific remediation (e.g., scale vs. restart). While the logs indicate a load spike, the absence of precedent for this specific service's failure mode under flash sale conditions requires human verification to avoid incorrect mitigation (e.g., restarting might not fix capacity issues, scaling might be the correct fix but lacks confirmed precedent).",
+   "hypothesis": "Redis memory exhaustion caused by a 3.4x traffic spike from the Friday 8PM flash sale, leading to key evictions and session drops.",
+   "runbook": [
+    "Page the Platform on-call engineer and open a war room.",
+    "Verify if the flash sale traffic spike is expected and if Redis capacity was pre-scaled.",
+    "Check if key eviction policy is causing critical session data loss.",
+    "Assess immediate need for vertical scaling (increase maxmemory) or horizontal scaling (add replicas/shards).",
+    "Monitor error rate and p99 latency for 15 minutes after any intervention."
+   ],
+   "repeat": false,
+   "repeat_note": "",
+   "cited_memories": [],
+   "recalled_count": 0,
+   "memory_enabled": true,
+   "model": "qwen/qwen3.8-27b",
+   "guardrail": null,
+   "latency_ms": 760,
+   "needs_human": true,
+   "recalled": [],
+   "pattern": [],
+   "status_update": {
+    "subject": "[SEV3] Session Cache (Redis) \u2014 session-cache used_memory 94% of maxmemory, evictions 4k/s",
+    "body": "**Status**: Investigating\n**Impact**: 3.1% of users affected; redis cluster for sessions and cart state degraded.\n**Current Understanding**: Redis memory exhaustion caused by a 3.4x traffic spike from the Friday 8PM flash sale, leading to key evictions and session drops.\n**Actions Taken**: Incident declared SEV3, roles assigned; the incident team is investigating.\n**Next Update**: in 120 min (by 22:10 IST)."
+   },
+   "created_at": "2026-09-28T21:47:45"
+  },
+  "INC-0904-02": {
+   "action": "escalate",
+   "severity": "SEV3",
+   "confidence": 0.6,
+   "reason": "While S1-S5 show a similar past incident (INC-0911-01), the current incident occurred despite the existence of action item S6/S7 (clear cache at 90%), and the previous resolution was an escalation (S8) rather than a specific automated fix. The absence of a successful remediation precedent in memory, combined with the known high-traffic trigger, warrants human intervention to verify the cache-clearing mechanism and manage the flash sale load.",
+   "hypothesis": "The Friday 8PM flash sale caused a 3.4x traffic spike that exhausted Redis memory, but the previously established mitigation (clearing cache at 90%) did not prevent the incident, indicating a failure in the guardrail or a new failure mode.",
+   "runbook": [
+    "Page the human incident commander immediately.",
+    "Verify if the 'clear cache at 90%' automation (Action Item S6) fired or failed.",
+    "Manually trigger a cache flush or increase maxmemory if safe.",
+    "Coordinate with the Flash Sale team to throttle non-critical session writes.",
+    "Monitor eviction rate and error rate for stabilization."
+   ],
+   "repeat": true,
+   "repeat_note": "2nd occurrence of RedisMemoryHigh on session-cache; Action item S6 (Clear cache at 90%) is open but evidently ineffective or not triggered.",
+   "cited_memories": [
+    {
+     "id": "4167e657-933f-439b-9060-691209418fb3",
+     "text": "Incident INC-0911-01 occurred in the session-cache service (Redis) due to high memory usage. | When: 2026-09-11 | Involving: Platform team",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00+00:00",
+     "score": null,
+     "label": "S1"
+    },
+    {
+     "id": "a8b7e95f-bd8a-4556-a074-b12e1fd538a6",
+     "text": "During incident INC-0911-01, the session-cache service recorded 94% saturation (limit 85%), 1.6% error rate (SLO 0.5%), and 40 ms p99 latency (SLO 20 ms).",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.020000+00:00",
+     "score": null,
+     "label": "S2"
+    },
+    {
+     "id": "32ad7c2e-3edb-45a9-afc5-7805e3203be3",
+     "text": "Incident INC-0911-01 occurred in the session-cache service (Redis) on 2026-09-11 due to high memory usage, triggering a SEV3 alert (RedisMemoryHigh) that affected 3.1% of users.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00+00:00",
+     "score": null,
+     "label": "S3"
+    },
+    {
+     "id": "0f223b0e-0d81-4563-be28-ce9c00aaa6ff",
+     "text": "Signals recorded: Saturation at 94% (limit 85%), Error rate 1.6% (SLO 0.5%), and p99 latency 40 ms (SLO 20 ms). | When: 2026-09-11",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.020000+00:00",
+     "score": null,
+     "label": "S4"
+    },
+    {
+     "id": "5b88911f-304f-4e7f-a69b-6a22a49dddd4",
+     "text": "Alert RedisMemoryHigh triggered with SEV3 severity, affecting 3.1% of users. | When: 2026-09-11",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.010000+00:00",
+     "score": null,
+     "label": "S5"
+    },
+    {
+     "id": "7c1d7a50-44db-4eec-93f3-bcea3788354b",
+     "text": "Action item: Clear cache whenever memory usage reaches 90%.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.040000+00:00",
+     "score": null,
+     "label": "S6"
+    },
+    {
+     "id": "021a893b-00a4-4e6a-ba20-eb6989993d0d",
+     "text": "The team established an action item to clear the cache whenever memory usage reaches 90%.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.040000+00:00",
+     "score": null,
+     "label": "S7"
+    },
+    {
+     "id": "6218e4cd-893d-47d3-a926-aba0836f62ec",
+     "text": "On-call engineer escalated to a human incident commander in 16 minutes. | When: 2026-09-11 | Involving: on-call engineer",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.030000+00:00",
+     "score": null,
+     "label": "S8"
+    }
+   ],
+   "recalled_count": 8,
+   "memory_enabled": true,
+   "model": "qwen/qwen3.8-27b",
+   "guardrail": null,
+   "latency_ms": 1078,
+   "needs_human": true,
+   "recalled": [
+    {
+     "id": "4167e657-933f-439b-9060-691209418fb3",
+     "text": "Incident INC-0911-01 occurred in the session-cache service (Redis) due to high memory usage. | When: 2026-09-11 | Involving: Platform team",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00+00:00",
+     "score": null,
+     "label": "S1"
+    },
+    {
+     "id": "a8b7e95f-bd8a-4556-a074-b12e1fd538a6",
+     "text": "During incident INC-0911-01, the session-cache service recorded 94% saturation (limit 85%), 1.6% error rate (SLO 0.5%), and 40 ms p99 latency (SLO 20 ms).",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.020000+00:00",
+     "score": null,
+     "label": "S2"
+    },
+    {
+     "id": "32ad7c2e-3edb-45a9-afc5-7805e3203be3",
+     "text": "Incident INC-0911-01 occurred in the session-cache service (Redis) on 2026-09-11 due to high memory usage, triggering a SEV3 alert (RedisMemoryHigh) that affected 3.1% of users.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00+00:00",
+     "score": null,
+     "label": "S3"
+    },
+    {
+     "id": "0f223b0e-0d81-4563-be28-ce9c00aaa6ff",
+     "text": "Signals recorded: Saturation at 94% (limit 85%), Error rate 1.6% (SLO 0.5%), and p99 latency 40 ms (SLO 20 ms). | When: 2026-09-11",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.020000+00:00",
+     "score": null,
+     "label": "S4"
+    },
+    {
+     "id": "5b88911f-304f-4e7f-a69b-6a22a49dddd4",
+     "text": "Alert RedisMemoryHigh triggered with SEV3 severity, affecting 3.1% of users. | When: 2026-09-11",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.010000+00:00",
+     "score": null,
+     "label": "S5"
+    },
+    {
+     "id": "7c1d7a50-44db-4eec-93f3-bcea3788354b",
+     "text": "Action item: Clear cache whenever memory usage reaches 90%.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.040000+00:00",
+     "score": null,
+     "label": "S6"
+    },
+    {
+     "id": "021a893b-00a4-4e6a-ba20-eb6989993d0d",
+     "text": "The team established an action item to clear the cache whenever memory usage reaches 90%.",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.040000+00:00",
+     "score": null,
+     "label": "S7"
+    },
+    {
+     "id": "6218e4cd-893d-47d3-a926-aba0836f62ec",
+     "text": "On-call engineer escalated to a human incident commander in 16 minutes. | When: 2026-09-11 | Involving: on-call engineer",
+     "tags": [
+      "signal:LATENCY_SLO",
+      "incident:INC-0911-01",
+      "action:escalate",
+      "service:session-cache",
+      "signal:SATURATION",
+      "severity:SEV3",
+      "signal:ERROR_RATE"
+     ],
+     "timestamp": "2026-09-11T20:10:00.030000+00:00",
+     "score": null,
+     "label": "S8"
+    }
+   ],
+   "pattern": [],
+   "status_update": {
+    "subject": "[SEV3] Session Cache (Redis) \u2014 session-cache used_memory 93% of maxmemory, evictions 6k/s",
+    "body": "**Status**: Investigating\n**Impact**: 5.4% of users affected; redis cluster for sessions and cart state degraded.\n**Current Understanding**: The Friday 8PM flash sale caused a 3.4x traffic spike that exhausted Redis memory, but the previously established mitigation (clearing cache at 90%) did not prevent the incident, indicating a failure in the guardrail or a new failure mode.\n**Actions Taken**: Incident declared SEV3, roles assigned; the incident team is investigating.\n**Next Update**: in 120 min (by 22:05 IST)."
+   },
+   "created_at": "2026-09-28T21:48:19"
+  }
+ },
+ "postmortems": {}
+}

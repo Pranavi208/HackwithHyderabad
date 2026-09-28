@@ -1,8 +1,2 @@
-.env
-.venv/
-var/
-__pycache__/
-.pytest_cache/
-frontend/node_modules/
-frontend/dist/
-frontend/*.tsbuildinfo
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*

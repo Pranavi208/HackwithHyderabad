@@ -1,0 +1,466 @@
+{
+ "INC-0901-01": {
+  "expected_action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Yes Bank side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "base_mttr": 35,
+  "assisted_mttr": 10,
+  "pattern": "upi_npci"
+ },
+ "INC-0901-02": {
+  "expected_action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "base_mttr": 20,
+  "assisted_mttr": 3,
+  "pattern": "ledger_recon"
+ },
+ "INC-0902-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 103s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0902-02": {
+  "expected_action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.44.0 (deployed 19 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "base_mttr": 38,
+  "assisted_mttr": 9,
+  "pattern": "checkout_deploy"
+ },
+ "INC-0903-01": {
+  "expected_action": "vendor",
+  "cause": "issuer-acs-slow",
+  "note": "Issuer ACS: ICICI slow. Opened ticket with issuer bank, showed 'try UPI' nudge to affected card BINs. Resolved from bank side in ~40 min.",
+  "base_mttr": 45,
+  "assisted_mttr": 12,
+  "pattern": "pg_acs"
+ },
+ "INC-0903-02": {
+  "expected_action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 379,394. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "base_mttr": 30,
+  "assisted_mttr": 5,
+  "pattern": "kafka_eod"
+ },
+ "INC-0904-01": {
+  "expected_action": "feature_flag",
+  "cause": "flag-rollout-without-guardrail-metric",
+  "note": "Turned feature flag one_click_upi off via kill switch; errors cleared within 2 min. Flag ramps are not tied to an error-rate guardrail (AI-CHK-15 open).",
+  "base_mttr": 30,
+  "assisted_mttr": 6,
+  "pattern": "checkout_flag"
+ },
+ "INC-0904-02": {
+  "expected_action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "base_mttr": 25,
+  "assisted_mttr": 6,
+  "pattern": "cache_flash"
+ },
+ "INC-0905-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 199s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0905-02": {
+  "expected_action": "failover",
+  "cause": "primary-sms-throttling",
+  "note": "Primary SMS provider MsgBharat throttling (429). Failed over OTP traffic to TextNova via provider switch; OTP success back to 99% in 3 min. Switch back after vendor confirms.",
+  "base_mttr": 25,
+  "assisted_mttr": 5,
+  "pattern": "sms_failover"
+ },
+ "INC-0906-01": {
+  "expected_action": "restart",
+  "cause": "reindex-heap-fragmentation",
+  "note": "Catalog reindex fragments heap on es-data-3. Rolling restart of es-data-3 after shard relocation; p99 normal in 8 min. Moving reindex to a dedicated node is backlog (SRCH-21).",
+  "base_mttr": 35,
+  "assisted_mttr": 8,
+  "pattern": "search_reindex"
+ },
+ "INC-0906-02": {
+  "expected_action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "base_mttr": 15,
+  "assisted_mttr": 2,
+  "pattern": "auth_jwks"
+ },
+ "INC-0907-01": {
+  "expected_action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Axis side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "base_mttr": 35,
+  "assisted_mttr": 10,
+  "pattern": "upi_npci"
+ },
+ "INC-0908-01": {
+  "expected_action": "feature_flag",
+  "cause": "digilocker-timeouts",
+  "note": "DigiLocker degraded. Switched flag kyc.docs_fallback=upload so users upload PAN/Aadhaar images for manual review; onboarding continued. Flag reverted after DigiLocker recovered.",
+  "base_mttr": 40,
+  "assisted_mttr": 7,
+  "pattern": "kyc_digilocker"
+ },
+ "INC-0908-02": {
+  "expected_action": "restart",
+  "cause": "reporting-job-on-primary",
+  "note": "Killed the finance reporting export queries on the primary and did a rolling restart of pgbouncer; pool recovered in 3 min. Root cause: reporting export reads from the primary instead of a replica. Action item AI-DATA-7 'move finance export to replica-1' still NOT done.",
+  "base_mttr": 50,
+  "assisted_mttr": 12,
+  "pattern": "db_pool"
+ },
+ "INC-0909-01": {
+  "expected_action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.45.0 (deployed 9 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "base_mttr": 38,
+  "assisted_mttr": 9,
+  "pattern": "checkout_deploy"
+ },
+ "INC-0909-02": {
+  "expected_action": "monitor",
+  "cause": "cdn-cold-cache-after-purge",
+  "note": "Cold cache after full CDN purge by the release pipeline; hit ratio recovered and 504s gone in ~10 min. Watched. Ticket MX-8: purge by path, not full purge.",
+  "base_mttr": 20,
+  "assisted_mttr": 4,
+  "pattern": "cdn_purge"
+ },
+ "INC-0910-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 90s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0910-02": {
+  "expected_action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 409,299. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "base_mttr": 30,
+  "assisted_mttr": 5,
+  "pattern": "kafka_eod"
+ },
+ "INC-0911-01": {
+  "expected_action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "base_mttr": 25,
+  "assisted_mttr": 6,
+  "pattern": "cache_flash"
+ },
+ "INC-0911-02": {
+  "expected_action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "base_mttr": 20,
+  "assisted_mttr": 3,
+  "pattern": "ledger_recon"
+ },
+ "INC-0912-01": {
+  "expected_action": "restart",
+  "cause": "reindex-heap-fragmentation",
+  "note": "Catalog reindex fragments heap on es-data-3. Rolling restart of es-data-3 after shard relocation; p99 normal in 8 min. Moving reindex to a dedicated node is backlog (SRCH-21).",
+  "base_mttr": 35,
+  "assisted_mttr": 8,
+  "pattern": "search_reindex"
+ },
+ "INC-0912-02": {
+  "expected_action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Yes Bank side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "base_mttr": 35,
+  "assisted_mttr": 10,
+  "pattern": "upi_npci"
+ },
+ "INC-0913-01": {
+  "expected_action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "base_mttr": 15,
+  "assisted_mttr": 2,
+  "pattern": "auth_jwks"
+ },
+ "INC-0914-01": {
+  "expected_action": "failover",
+  "cause": "primary-sms-throttling",
+  "note": "Primary SMS provider MsgBharat throttling (429). Failed over OTP traffic to TextNova via provider switch; OTP success back to 99% in 3 min. Switch back after vendor confirms.",
+  "base_mttr": 25,
+  "assisted_mttr": 5,
+  "pattern": "sms_failover"
+ },
+ "INC-0914-02": {
+  "expected_action": "vendor",
+  "cause": "issuer-acs-slow",
+  "note": "Issuer ACS: SBI slow. Opened ticket with issuer bank, showed 'try UPI' nudge to affected card BINs. Resolved from bank side in ~40 min.",
+  "base_mttr": 45,
+  "assisted_mttr": 12,
+  "pattern": "pg_acs"
+ },
+ "INC-0915-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 105s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0915-02": {
+  "expected_action": "feature_flag",
+  "cause": "digilocker-timeouts",
+  "note": "DigiLocker degraded. Switched flag kyc.docs_fallback=upload so users upload PAN/Aadhaar images for manual review; onboarding continued. Flag reverted after DigiLocker recovered.",
+  "base_mttr": 40,
+  "assisted_mttr": 7,
+  "pattern": "kyc_digilocker"
+ },
+ "INC-0916-01": {
+  "expected_action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.46.0 (deployed 7 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "base_mttr": 38,
+  "assisted_mttr": 9,
+  "pattern": "checkout_deploy"
+ },
+ "INC-0916-02": {
+  "expected_action": "merge",
+  "cause": "alert-refire-during-incident",
+  "note": "Duplicate of INC-0916-01: same alert re-fired while the rollback was in progress. Merged into the parent incident.",
+  "base_mttr": 10,
+  "assisted_mttr": 1,
+  "pattern": "duplicate"
+ },
+ "INC-0916-03": {
+  "expected_action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 360,782. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "base_mttr": 30,
+  "assisted_mttr": 5,
+  "pattern": "kafka_eod"
+ },
+ "INC-0917-01": {
+  "expected_action": "restart",
+  "cause": "reporting-job-on-primary",
+  "note": "Killed the finance reporting export queries on the primary and did a rolling restart of pgbouncer; pool recovered in 3 min. Root cause: reporting export reads from the primary instead of a replica. Action item AI-DATA-7 'move finance export to replica-1' still NOT done.",
+  "base_mttr": 50,
+  "assisted_mttr": 12,
+  "pattern": "db_pool"
+ },
+ "INC-0918-01": {
+  "expected_action": "feature_flag",
+  "cause": "flag-rollout-without-guardrail-metric",
+  "note": "Turned feature flag emi_offers_v2 off via kill switch; errors cleared within 2 min. Flag ramps are not tied to an error-rate guardrail (AI-CHK-15 open).",
+  "base_mttr": 30,
+  "assisted_mttr": 6,
+  "pattern": "checkout_flag"
+ },
+ "INC-0918-02": {
+  "expected_action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "base_mttr": 25,
+  "assisted_mttr": 6,
+  "pattern": "cache_flash"
+ },
+ "INC-0919-01": {
+  "expected_action": "restart",
+  "cause": "reindex-heap-fragmentation",
+  "note": "Catalog reindex fragments heap on es-data-3. Rolling restart of es-data-3 after shard relocation; p99 normal in 8 min. Moving reindex to a dedicated node is backlog (SRCH-21).",
+  "base_mttr": 35,
+  "assisted_mttr": 8,
+  "pattern": "search_reindex"
+ },
+ "INC-0919-02": {
+  "expected_action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Axis side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "base_mttr": 35,
+  "assisted_mttr": 10,
+  "pattern": "upi_npci"
+ },
+ "INC-0920-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 212s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0920-02": {
+  "expected_action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "base_mttr": 15,
+  "assisted_mttr": 2,
+  "pattern": "auth_jwks"
+ },
+ "INC-0921-01": {
+  "expected_action": "failover",
+  "cause": "primary-sms-throttling",
+  "note": "Primary SMS provider MsgBharat throttling (429). Failed over OTP traffic to TextNova via provider switch; OTP success back to 99% in 3 min. Switch back after vendor confirms.",
+  "base_mttr": 25,
+  "assisted_mttr": 5,
+  "pattern": "sms_failover"
+ },
+ "INC-0921-02": {
+  "expected_action": "escalate",
+  "cause": "poison-message",
+  "note": "Midday lag of 2.9M with no EOD batch running: not the usual capacity issue; scaling would not help. Poison message blocked a partition; human IC coordinated skip + DLQ.",
+  "base_mttr": 70,
+  "assisted_mttr": 70,
+  "pattern": "anomaly_kafka"
+ },
+ "INC-0922-01": {
+  "expected_action": "escalate",
+  "cause": "hsm-connection-leak",
+  "note": "NOT an NPCI blip: NPCI green and failure 42%, far beyond the usual 6-9%. War room: HSM client connection leak after a certificate renewal; human IC coordinated failover to the standby HSM. New failure mode.",
+  "base_mttr": 95,
+  "assisted_mttr": 95,
+  "pattern": "anomaly_upi"
+ },
+ "INC-0922-02": {
+  "expected_action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "base_mttr": 20,
+  "assisted_mttr": 3,
+  "pattern": "ledger_recon"
+ },
+ "INC-0923-01": {
+  "expected_action": "vendor",
+  "cause": "issuer-acs-slow",
+  "note": "Issuer ACS: ICICI slow. Opened ticket with issuer bank, showed 'try UPI' nudge to affected card BINs. Resolved from bank side in ~40 min.",
+  "base_mttr": 45,
+  "assisted_mttr": 12,
+  "pattern": "pg_acs"
+ },
+ "INC-0923-02": {
+  "expected_action": "monitor",
+  "cause": "cdn-cold-cache-after-purge",
+  "note": "Cold cache after full CDN purge by the release pipeline; hit ratio recovered and 504s gone in ~10 min. Watched. Ticket MX-8: purge by path, not full purge.",
+  "base_mttr": 20,
+  "assisted_mttr": 4,
+  "pattern": "cdn_purge"
+ },
+ "INC-0923-03": {
+  "expected_action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 419,665. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "base_mttr": 30,
+  "assisted_mttr": 5,
+  "pattern": "kafka_eod"
+ },
+ "INC-0924-01": {
+  "expected_action": "feature_flag",
+  "cause": "digilocker-timeouts",
+  "note": "DigiLocker degraded. Switched flag kyc.docs_fallback=upload so users upload PAN/Aadhaar images for manual review; onboarding continued. Flag reverted after DigiLocker recovered.",
+  "base_mttr": 40,
+  "assisted_mttr": 7,
+  "pattern": "kyc_digilocker"
+ },
+ "INC-0924-02": {
+  "expected_action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.47.0 (deployed 20 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "base_mttr": 38,
+  "assisted_mttr": 9,
+  "pattern": "checkout_deploy"
+ },
+ "INC-0925-01": {
+  "expected_action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Yes Bank side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "base_mttr": 35,
+  "assisted_mttr": 10,
+  "pattern": "upi_npci"
+ },
+ "INC-0925-02": {
+  "expected_action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "base_mttr": 25,
+  "assisted_mttr": 6,
+  "pattern": "cache_flash"
+ },
+ "INC-0926-01": {
+  "expected_action": "restart",
+  "cause": "reindex-heap-fragmentation",
+  "note": "Catalog reindex fragments heap on es-data-3. Rolling restart of es-data-3 after shard relocation; p99 normal in 8 min. Moving reindex to a dedicated node is backlog (SRCH-21).",
+  "base_mttr": 35,
+  "assisted_mttr": 8,
+  "pattern": "search_reindex"
+ },
+ "INC-0926-02": {
+  "expected_action": "feature_flag",
+  "cause": "flag-rollout-without-guardrail-metric",
+  "note": "Turned feature flag smart_retry off via kill switch; errors cleared within 2 min. Flag ramps are not tied to an error-rate guardrail (AI-CHK-15 open).",
+  "base_mttr": 30,
+  "assisted_mttr": 6,
+  "pattern": "checkout_flag"
+ },
+ "INC-0926-03": {
+  "expected_action": "escalate",
+  "cause": "double-posted-refunds",
+  "note": "Real mismatch, not the usual backlog: 312 entries worth INR 48.7 lakh. SEV1, finance and VP Eng paged, refunds double-posted by a retry bug. Froze payouts until fixed.",
+  "base_mttr": 180,
+  "assisted_mttr": 180,
+  "pattern": "anomaly_ledger"
+ },
+ "INC-0927-01": {
+  "expected_action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 224s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "base_mttr": 20,
+  "assisted_mttr": 2,
+  "pattern": "db_backup_lag"
+ },
+ "INC-0927-02": {
+  "expected_action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "base_mttr": 15,
+  "assisted_mttr": 2,
+  "pattern": "auth_jwks"
+ },
+ "INC-0928-01": {
+  "expected_action": "failover",
+  "cause": "primary-sms-throttling",
+  "note": "Primary SMS provider MsgBharat throttling (429). Failed over OTP traffic to TextNova via provider switch; OTP success back to 99% in 3 min. Switch back after vendor confirms.",
+  "base_mttr": 25,
+  "assisted_mttr": 5,
+  "pattern": "sms_failover"
+ },
+ "INC-0929-01": {
+  "expected_action": "restart",
+  "cause": "reporting-job-on-primary",
+  "note": "Killed the finance reporting export queries on the primary and did a rolling restart of pgbouncer; pool recovered in 3 min. Root cause: reporting export reads from the primary instead of a replica. Action item AI-DATA-7 'move finance export to replica-1' still NOT done.",
+  "base_mttr": 50,
+  "assisted_mttr": 12,
+  "pattern": "db_pool"
+ },
+ "INC-0930-01": {
+  "expected_action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 364,462. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "base_mttr": 30,
+  "assisted_mttr": 5,
+  "pattern": "kafka_eod"
+ },
+ "INC-0930-02": {
+  "expected_action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "base_mttr": 20,
+  "assisted_mttr": 3,
+  "pattern": "ledger_recon"
+ }
+}

@@ -1,0 +1,1520 @@
+[
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-08-03T02:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 175s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 175,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "ledger-service",
+    "ref": "ledger-service v3.38.0",
+    "at": "2026-08-03T01:59",
+    "team": "Ledger & Recon"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "id": "INC-0803-01",
+  "date": "2026-08-03",
+  "day": 3,
+  "signals": [
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: nightly pg_basebackup (02:00, 50 min)",
+    "details": {
+     "jobs": [
+      "nightly pg_basebackup"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 175s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "mttr_min": 20
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-08-04T10:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 93.5% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.065,
+   "p99_ms": 2404,
+   "saturation": 0.5,
+   "burn_rate": 12.0,
+   "affected_users_pct": 9.1,
+   "failed_txn_per_min": 3859
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Axis handles"
+  ],
+  "id": "INC-0804-01",
+  "date": "2026-08-04",
+  "day": 4,
+  "signals": [
+   {
+    "code": "DEPENDENCY_DEGRADED",
+    "severity": "medium",
+    "message": "Dependency status: NPCI UPI degraded, PSP bank: Axis degraded",
+    "details": {
+     "dependencies": [
+      {
+       "name": "NPCI UPI",
+       "status": "degraded"
+      },
+      {
+       "name": "PSP bank: Axis",
+       "status": "degraded"
+      }
+     ]
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 6.5% vs SLO threshold 3.0%",
+    "details": {
+     "error_rate": 0.065,
+     "threshold": 0.03
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 2404 ms vs SLO 1500 ms",
+    "details": {
+     "p99_ms": 2404,
+     "slo_ms": 1500
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "low",
+    "message": "Error budget burning at 12.0x (ticket threshold 6.0x)",
+    "details": {
+     "burn_rate": 12.0
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Axis side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "mttr_min": 35
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-08-05T11:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 9.0% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.09,
+   "p99_ms": 436,
+   "saturation": 0.55,
+   "burn_rate": 30.1,
+   "affected_users_pct": 27.6,
+   "failed_txn_per_min": 1093
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.41.0",
+    "at": "2026-08-05T11:06",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.41.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "id": "INC-0805-01",
+  "date": "2026-08-05",
+  "day": 5,
+  "signals": [
+   {
+    "code": "DEPLOY_CORRELATED",
+    "severity": "high",
+    "message": "Deploy checkout-api v2.41.0 on checkout-api 14 min before the alert",
+    "details": {
+     "ref": "checkout-api v2.41.0",
+     "minutes_before": 14,
+     "team": "Checkout"
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 9.0% vs SLO threshold 1.0%",
+    "details": {
+     "error_rate": 0.09,
+     "threshold": 0.01
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 436 ms vs SLO 400 ms",
+    "details": {
+     "p99_ms": 436,
+     "slo_ms": 400
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "high",
+    "message": "Error budget burning at 30.1x (page threshold 14.4x)",
+    "details": {
+     "burn_rate": 30.1
+    }
+   }
+  ],
+  "severity": "SEV2",
+  "action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.41.0 (deployed 14 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "mttr_min": 38
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-08-06T23:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 378,766 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.92,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 378766,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "id": "INC-0806-01",
+  "date": "2026-08-06",
+  "day": 6,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "medium",
+    "message": "consumer CPU at 92% (limit 85%)",
+    "details": {
+     "saturation": 0.92
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: EOD batch settlement publish (22:45, 70 min)",
+    "details": {
+     "jobs": [
+      "EOD batch settlement publish"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 378,766. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "mttr_min": 30
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-08-09T04:02",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 3.3% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.033,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.6
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "id": "INC-0809-01",
+  "date": "2026-08-09",
+  "day": 9,
+  "signals": [
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 3.3% vs SLO threshold 1.0%",
+    "details": {
+     "error_rate": 0.033,
+     "threshold": 0.01
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: JWKS signing-key rotation (04:00, 10 min)",
+    "details": {
+     "jobs": [
+      "JWKS signing-key rotation"
+     ]
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "mttr_min": 15
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-08-10T23:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "2575 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 1572
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "id": "INC-0810-01",
+  "date": "2026-08-10",
+  "day": 10,
+  "signals": [
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: EOD settlement reconciliation (23:30, 40 min)",
+    "details": {
+     "jobs": [
+      "EOD settlement reconciliation"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "mttr_min": 20
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-08-11T15:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PgbouncerPoolExhausted",
+   "source": "Prometheus",
+   "summary": "pgbouncer client wait queue 656, pool 100% used"
+  },
+  "metrics": {
+   "error_rate": 0.058,
+   "p99_ms": 2110,
+   "saturation": 1.0,
+   "burn_rate": 25.1,
+   "affected_users_pct": 17.4,
+   "saturation_resource": "pgbouncer pool"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "ledger-service",
+    "ref": "ledger-service v1.71.0",
+    "at": "2026-08-11T14:24",
+    "team": "Ledger & Recon"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN pgbouncer: no more connections allowed (max_client_conn)",
+   "INFO long-running queries from role finance_report on primary (SELECT ... FROM orders JOIN ...)"
+  ],
+  "id": "INC-0811-01",
+  "date": "2026-08-11",
+  "day": 11,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "high",
+    "message": "pgbouncer pool at 100% (limit 85%)",
+    "details": {
+     "saturation": 1.0
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "high",
+    "message": "Error rate 5.8% vs SLO threshold 0.1%",
+    "details": {
+     "error_rate": 0.058,
+     "threshold": 0.001
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 2110 ms vs SLO 50 ms",
+    "details": {
+     "p99_ms": 2110,
+     "slo_ms": 50
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "high",
+    "message": "Error budget burning at 25.1x (page threshold 14.4x)",
+    "details": {
+     "burn_rate": 25.1
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: finance reporting export (15:00, 30 min)",
+    "details": {
+     "jobs": [
+      "finance reporting export"
+     ]
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "restart",
+  "cause": "reporting-job-on-primary",
+  "note": "Killed the finance reporting export queries on the primary and did a rolling restart of pgbouncer; pool recovered in 3 min. Root cause: reporting export reads from the primary instead of a replica. Action item AI-DATA-7 'move finance export to replica-1' still NOT done.",
+  "mttr_min": 50
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-08-12T02:25",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 151s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 151,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "auth-service",
+    "ref": "auth-service v5.64.0",
+    "at": "2026-08-12T02:15",
+    "team": "Identity"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "id": "INC-0812-01",
+  "date": "2026-08-12",
+  "day": 12,
+  "signals": [
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: nightly pg_basebackup (02:00, 50 min)",
+    "details": {
+     "jobs": [
+      "nightly pg_basebackup"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 151s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "mttr_min": 20
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-08-13T18:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 92.4% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.076,
+   "p99_ms": 1800,
+   "saturation": 0.5,
+   "burn_rate": 8.6,
+   "affected_users_pct": 10.6,
+   "failed_txn_per_min": 2271
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "operational"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "degraded"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Yes Bank handles"
+  ],
+  "id": "INC-0813-01",
+  "date": "2026-08-13",
+  "day": 13,
+  "signals": [
+   {
+    "code": "DEPENDENCY_DEGRADED",
+    "severity": "medium",
+    "message": "Dependency status: NPCI UPI degraded, PSP bank: Yes Bank degraded",
+    "details": {
+     "dependencies": [
+      {
+       "name": "NPCI UPI",
+       "status": "degraded"
+      },
+      {
+       "name": "PSP bank: Yes Bank",
+       "status": "degraded"
+      }
+     ]
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 7.6% vs SLO threshold 3.0%",
+    "details": {
+     "error_rate": 0.076,
+     "threshold": 0.03
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 1800 ms vs SLO 1500 ms",
+    "details": {
+     "p99_ms": 1800,
+     "slo_ms": 1500
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "low",
+    "message": "Error budget burning at 8.6x (ticket threshold 6.0x)",
+    "details": {
+     "burn_rate": 8.6
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Yes Bank side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "mttr_min": 35
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-08-14T20:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 91% of maxmemory, evictions 3k/s"
+  },
+  "metrics": {
+   "error_rate": 0.015,
+   "p99_ms": 57,
+   "saturation": 0.91,
+   "burn_rate": 0.0,
+   "affected_users_pct": 5.3,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "merchant-dashboard",
+    "ref": "merchant-dashboard v2.21.0",
+    "at": "2026-08-14T19:23",
+    "team": "Merchant Experience"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "id": "INC-0814-01",
+  "date": "2026-08-14",
+  "day": 14,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "medium",
+    "message": "Redis memory at 91% (limit 85%)",
+    "details": {
+     "saturation": 0.91
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 1.5% vs SLO threshold 0.5%",
+    "details": {
+     "error_rate": 0.015,
+     "threshold": 0.005
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 57 ms vs SLO 20 ms",
+    "details": {
+     "p99_ms": 57,
+     "slo_ms": 20
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "mttr_min": 25
+ },
+ {
+  "service_id": "search-service",
+  "started_at": "2026-08-17T03:20",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ESHeapPressure",
+   "source": "Prometheus",
+   "summary": "es-data-3 JVM heap 94%, search p99 1406 ms"
+  },
+  "metrics": {
+   "error_rate": 0.006,
+   "p99_ms": 1342,
+   "saturation": 0.94,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.6,
+   "saturation_resource": "JVM heap"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "notification-service",
+    "ref": "notification-service v1.28.0",
+    "at": "2026-08-17T02:40",
+    "team": "Engagement"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN [gc][old] es-data-3 spent 4.2s in GC",
+   "INFO catalog full reindex running"
+  ],
+  "id": "INC-0817-01",
+  "date": "2026-08-17",
+  "day": 17,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "medium",
+    "message": "JVM heap at 94% (limit 85%)",
+    "details": {
+     "saturation": 0.94
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 1342 ms vs SLO 350 ms",
+    "details": {
+     "p99_ms": 1342,
+     "slo_ms": 350
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: catalog full reindex (03:00, 45 min)",
+    "details": {
+     "jobs": [
+      "catalog full reindex"
+     ]
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "restart",
+  "cause": "reindex-heap-fragmentation",
+  "note": "Catalog reindex fragments heap on es-data-3. Rolling restart of es-data-3 after shard relocation; p99 normal in 8 min. Moving reindex to a dedicated node is backlog (SRCH-21).",
+  "mttr_min": 35
+ },
+ {
+  "service_id": "notification-service",
+  "started_at": "2026-08-18T10:30",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "OTPDeliveryFailures",
+   "source": "Datadog",
+   "summary": "SMS OTP delivery failure 15% on primary provider"
+  },
+  "metrics": {
+   "error_rate": 0.153,
+   "p99_ms": 7701,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.6
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "SMS provider: MsgBharat (primary)",
+    "status": "degraded"
+   },
+   {
+    "name": "SMS provider: TextNova (secondary)",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN MsgBharat HTTP 429 Too Many Requests",
+   "INFO TextNova (secondary) healthy"
+  ],
+  "id": "INC-0818-01",
+  "date": "2026-08-18",
+  "day": 18,
+  "signals": [
+   {
+    "code": "DEPENDENCY_DEGRADED",
+    "severity": "medium",
+    "message": "Dependency status: SMS provider: MsgBharat (primary) degraded",
+    "details": {
+     "dependencies": [
+      {
+       "name": "SMS provider: MsgBharat (primary)",
+       "status": "degraded"
+      }
+     ]
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 15.3% vs SLO threshold 2.0%",
+    "details": {
+     "error_rate": 0.153,
+     "threshold": 0.02
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 7701 ms vs SLO 2000 ms",
+    "details": {
+     "p99_ms": 7701,
+     "slo_ms": 2000
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "failover",
+  "cause": "primary-sms-throttling",
+  "note": "Primary SMS provider MsgBharat throttling (429). Failed over OTP traffic to TextNova via provider switch; OTP success back to 99% in 3 min. Switch back after vendor confirms.",
+  "mttr_min": 25
+ },
+ {
+  "service_id": "checkout-api",
+  "started_at": "2026-08-19T14:40",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CheckoutHigh5xxRate",
+   "source": "Prometheus",
+   "summary": "5xx ratio 10.4% over 5m on checkout-api"
+  },
+  "metrics": {
+   "error_rate": 0.104,
+   "p99_ms": 591,
+   "saturation": 0.55,
+   "burn_rate": 41.4,
+   "affected_users_pct": 17.5,
+   "failed_txn_per_min": 965
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v2.42.0",
+    "at": "2026-08-19T14:23",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "ERROR checkout-api v2.42.0 NullPointerException in PromoResolver.apply (cart without promo)",
+   "WARN envoy upstream_rq_5xx rising on checkout-api pods (new ReplicaSet only)"
+  ],
+  "id": "INC-0819-01",
+  "date": "2026-08-19",
+  "day": 19,
+  "signals": [
+   {
+    "code": "DEPLOY_CORRELATED",
+    "severity": "high",
+    "message": "Deploy checkout-api v2.42.0 on checkout-api 17 min before the alert",
+    "details": {
+     "ref": "checkout-api v2.42.0",
+     "minutes_before": 17,
+     "team": "Checkout"
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "high",
+    "message": "Error rate 10.4% vs SLO threshold 1.0%",
+    "details": {
+     "error_rate": 0.104,
+     "threshold": 0.01
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 591 ms vs SLO 400 ms",
+    "details": {
+     "p99_ms": 591,
+     "slo_ms": 400
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "high",
+    "message": "Error budget burning at 41.4x (page threshold 14.4x)",
+    "details": {
+     "burn_rate": 41.4
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "rollback",
+  "cause": "bad-deploy-canary-misses-5xx",
+  "note": "Rolled back checkout-api v2.42.0 (deployed 17 min before the alert); 5xx back to baseline 4 min after rollback. Canary analysis only checks latency, not 5xx ratio. Action item AI-CHK-12 'add 5xx ratio to canary gate' still open.",
+  "mttr_min": 38
+ },
+ {
+  "service_id": "kafka-events",
+  "started_at": "2026-08-20T23:15",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "KafkaConsumerLagHigh",
+   "source": "Prometheus",
+   "summary": "ledger-consumer lag 269,176 messages on payments.settled"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 120,
+   "saturation": 0.9,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "consumer_lag": 269176,
+   "saturation_resource": "consumer CPU"
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "search-service",
+    "ref": "search-service v2.30.0",
+    "at": "2026-08-20T22:29",
+    "team": "Discovery"
+   }
+  ],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD batch settlement publish started 22:45",
+   "WARN ledger-consumer group 12 consumers, 48 partitions"
+  ],
+  "id": "INC-0820-01",
+  "date": "2026-08-20",
+  "day": 20,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "medium",
+    "message": "consumer CPU at 90% (limit 85%)",
+    "details": {
+     "saturation": 0.9
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: EOD batch settlement publish (22:45, 70 min)",
+    "details": {
+     "jobs": [
+      "EOD batch settlement publish"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "scale",
+  "cause": "eod-batch-consumer-capacity",
+  "note": "EOD batch publish; lag 269,176. Scaled ledger-consumer from 12 to 24 replicas, lag drained in 18 min. No user impact.",
+  "mttr_min": 30
+ },
+ {
+  "service_id": "payments-gateway",
+  "started_at": "2026-08-21T12:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "CardAuthTimeouts",
+   "source": "Datadog",
+   "summary": "3-D Secure timeouts 7.0% on SBI cards"
+  },
+  "metrics": {
+   "error_rate": 0.07,
+   "p99_ms": 5649,
+   "saturation": 0.5,
+   "burn_rate": 9.4,
+   "affected_users_pct": 6.3,
+   "failed_txn_per_min": 282
+  },
+  "recent_changes": [
+   {
+    "type": "deploy",
+    "service": "checkout-api",
+    "ref": "checkout-api v4.36.0",
+    "at": "2026-08-21T11:35",
+    "team": "Checkout"
+   }
+  ],
+  "dependencies": [
+   {
+    "name": "Visa/Mastercard networks",
+    "status": "operational"
+   },
+   {
+    "name": "Issuer ACS: SBI",
+    "status": "degraded"
+   },
+   {
+    "name": "Issuer ACS: ICICI",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN ACS SBI p99 8.4s, timeouts after 10s",
+   "INFO other issuers healthy"
+  ],
+  "id": "INC-0821-01",
+  "date": "2026-08-21",
+  "day": 21,
+  "signals": [
+   {
+    "code": "DEPENDENCY_DEGRADED",
+    "severity": "medium",
+    "message": "Dependency status: Issuer ACS: SBI degraded",
+    "details": {
+     "dependencies": [
+      {
+       "name": "Issuer ACS: SBI",
+       "status": "degraded"
+      }
+     ]
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 7.0% vs SLO threshold 2.0%",
+    "details": {
+     "error_rate": 0.07,
+     "threshold": 0.02
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 5649 ms vs SLO 1200 ms",
+    "details": {
+     "p99_ms": 5649,
+     "slo_ms": 1200
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "low",
+    "message": "Error budget burning at 9.4x (ticket threshold 6.0x)",
+    "details": {
+     "burn_rate": 9.4
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "vendor",
+  "cause": "issuer-acs-slow",
+  "note": "Issuer ACS: SBI slow. Opened ticket with issuer bank, showed 'try UPI' nudge to affected card BINs. Resolved from bank side in ~40 min.",
+  "mttr_min": 45
+ },
+ {
+  "service_id": "auth-service",
+  "started_at": "2026-08-23T04:03",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "Auth401Spike",
+   "source": "Datadog",
+   "summary": "401 responses 3.8% on token validation"
+  },
+  "metrics": {
+   "error_rate": 0.038,
+   "p99_ms": 140,
+   "saturation": 0.5,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.8
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN kid not found in JWKS cache; refetching",
+   "INFO signing key rotated at 04:00"
+  ],
+  "id": "INC-0823-01",
+  "date": "2026-08-23",
+  "day": 23,
+  "signals": [
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 3.8% vs SLO threshold 1.0%",
+    "details": {
+     "error_rate": 0.038,
+     "threshold": 0.01
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: JWKS signing-key rotation (04:00, 10 min)",
+    "details": {
+     "jobs": [
+      "JWKS signing-key rotation"
+     ]
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "monitor",
+  "cause": "jwks-cache-ttl-after-rotation",
+  "note": "Weekly JWKS key rotation; edge caches hold old keys for up to 5 min so some tokens fail validation. Self-heals by 04:07; watched it, no action. Few users at 4 AM.",
+  "mttr_min": 15
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-08-24T02:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PostgresReplicaLagHigh",
+   "source": "Prometheus",
+   "summary": "replica-2 replication lag 92s (threshold 60s)"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 22,
+   "saturation": 0.62,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "replica_lag_s": 92,
+   "saturation_resource": "disk IO"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO pg_basebackup running from replica-2",
+   "INFO reads served by replica-1; replica-2 out of LB pool"
+  ],
+  "id": "INC-0824-01",
+  "date": "2026-08-24",
+  "day": 24,
+  "signals": [
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: nightly pg_basebackup (02:00, 50 min)",
+    "details": {
+     "jobs": [
+      "nightly pg_basebackup"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "suppress",
+  "cause": "backup-io-replica-lag",
+  "note": "Known noise: nightly pg_basebackup saturates IO on replica-2 and lag hits 92s; replica-2 is drained from the read pool during backup so no user impact. Acked. Alert-tuning ticket OBS-44 (silence during backup window) still open.",
+  "mttr_min": 20
+ },
+ {
+  "service_id": "orders-db",
+  "started_at": "2026-08-25T15:05",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "PgbouncerPoolExhausted",
+   "source": "Prometheus",
+   "summary": "pgbouncer client wait queue 316, pool 98% used"
+  },
+  "metrics": {
+   "error_rate": 0.053,
+   "p99_ms": 2205,
+   "saturation": 0.98,
+   "burn_rate": 16.4,
+   "affected_users_pct": 11.9,
+   "saturation_resource": "pgbouncer pool"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN pgbouncer: no more connections allowed (max_client_conn)",
+   "INFO long-running queries from role finance_report on primary (SELECT ... FROM orders JOIN ...)"
+  ],
+  "id": "INC-0825-01",
+  "date": "2026-08-25",
+  "day": 25,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "high",
+    "message": "pgbouncer pool at 98% (limit 85%)",
+    "details": {
+     "saturation": 0.98
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "high",
+    "message": "Error rate 5.3% vs SLO threshold 0.1%",
+    "details": {
+     "error_rate": 0.053,
+     "threshold": 0.001
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 2205 ms vs SLO 50 ms",
+    "details": {
+     "p99_ms": 2205,
+     "slo_ms": 50
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "high",
+    "message": "Error budget burning at 16.4x (page threshold 14.4x)",
+    "details": {
+     "burn_rate": 16.4
+    }
+   },
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: finance reporting export (15:00, 30 min)",
+    "details": {
+     "jobs": [
+      "finance reporting export"
+     ]
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "restart",
+  "cause": "reporting-job-on-primary",
+  "note": "Killed the finance reporting export queries on the primary and did a rolling restart of pgbouncer; pool recovered in 3 min. Root cause: reporting export reads from the primary instead of a replica. Action item AI-DATA-7 'move finance export to replica-1' still NOT done.",
+  "mttr_min": 50
+ },
+ {
+  "service_id": "upi-switch",
+  "started_at": "2026-08-26T20:45",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "UPISuccessRateDrop",
+   "source": "Datadog",
+   "summary": "UPI success rate 92.3% (baseline 99.2%)"
+  },
+  "metrics": {
+   "error_rate": 0.077,
+   "p99_ms": 1943,
+   "saturation": 0.5,
+   "burn_rate": 12.8,
+   "affected_users_pct": 10.8,
+   "failed_txn_per_min": 3909
+  },
+  "recent_changes": [],
+  "dependencies": [
+   {
+    "name": "NPCI UPI",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Axis",
+    "status": "degraded"
+   },
+   {
+    "name": "PSP bank: Yes Bank",
+    "status": "operational"
+   }
+  ],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN NPCI response U28/U30 (PSP not available) rising",
+   "INFO failures concentrated on Axis handles"
+  ],
+  "id": "INC-0826-01",
+  "date": "2026-08-26",
+  "day": 26,
+  "signals": [
+   {
+    "code": "DEPENDENCY_DEGRADED",
+    "severity": "medium",
+    "message": "Dependency status: NPCI UPI degraded, PSP bank: Axis degraded",
+    "details": {
+     "dependencies": [
+      {
+       "name": "NPCI UPI",
+       "status": "degraded"
+      },
+      {
+       "name": "PSP bank: Axis",
+       "status": "degraded"
+      }
+     ]
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 7.7% vs SLO threshold 3.0%",
+    "details": {
+     "error_rate": 0.077,
+     "threshold": 0.03
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 1943 ms vs SLO 1500 ms",
+    "details": {
+     "p99_ms": 1943,
+     "slo_ms": 1500
+    }
+   },
+   {
+    "code": "ERROR_BUDGET_BURN",
+    "severity": "low",
+    "message": "Error budget burning at 12.8x (ticket threshold 6.0x)",
+    "details": {
+     "burn_rate": 12.8
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "vendor",
+  "cause": "npci-psp-degradation",
+  "note": "NPCI/Axis side degradation (U28/U30 codes). Raised ticket with NPCI, posted status page banner, enabled smart retry. Recovered on its own in ~25 min. Typical failure 6-9% in these episodes.",
+  "mttr_min": 35
+ },
+ {
+  "service_id": "ledger-service",
+  "started_at": "2026-08-27T23:45",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "ReconPendingHigh",
+   "source": "Prometheus",
+   "summary": "2721 settlement entries pending reconciliation"
+  },
+  "metrics": {
+   "error_rate": 0.0,
+   "p99_ms": 300,
+   "saturation": 0.7,
+   "burn_rate": 0.0,
+   "affected_users_pct": 0.0,
+   "saturation_resource": "recon workers",
+   "recon_pending": 2637
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "INFO EOD settlement file from partner bank arrived 23:34",
+   "INFO recon workers processing, 0 mismatches"
+  ],
+  "id": "INC-0827-01",
+  "date": "2026-08-27",
+  "day": 27,
+  "signals": [
+   {
+    "code": "SCHEDULED_JOB",
+    "severity": "low",
+    "message": "Overlaps scheduled job: EOD settlement reconciliation (23:30, 40 min)",
+    "details": {
+     "jobs": [
+      "EOD settlement reconciliation"
+     ]
+    }
+   },
+   {
+    "code": "NO_USER_IMPACT",
+    "severity": "low",
+    "message": "No user-facing impact measured",
+    "details": {}
+   }
+  ],
+  "severity": "SEV4",
+  "action": "monitor",
+  "cause": "eod-recon-backlog",
+  "note": "EOD settlement reconciliation backlog while partner bank files arrive. 0 mismatches; clears by 00:10 on its own. Watched, no action.",
+  "mttr_min": 20
+ },
+ {
+  "service_id": "session-cache",
+  "started_at": "2026-08-28T20:10",
+  "region": "ap-south-1 (Mumbai)",
+  "alert": {
+   "name": "RedisMemoryHigh",
+   "source": "Prometheus",
+   "summary": "session-cache used_memory 96% of maxmemory, evictions 5k/s"
+  },
+  "metrics": {
+   "error_rate": 0.017,
+   "p99_ms": 59,
+   "saturation": 0.96,
+   "burn_rate": 0.0,
+   "affected_users_pct": 2.1,
+   "saturation_resource": "Redis memory"
+  },
+  "recent_changes": [],
+  "dependencies": [],
+  "customer_reported": false,
+  "support_tickets": 0,
+  "data_integrity": null,
+  "logs": [
+   "WARN evicted_keys rising; cart sessions dropped",
+   "INFO Friday 8PM flash sale traffic 3.4x"
+  ],
+  "id": "INC-0828-01",
+  "date": "2026-08-28",
+  "day": 28,
+  "signals": [
+   {
+    "code": "SATURATION",
+    "severity": "high",
+    "message": "Redis memory at 96% (limit 85%)",
+    "details": {
+     "saturation": 0.96
+    }
+   },
+   {
+    "code": "ERROR_RATE",
+    "severity": "medium",
+    "message": "Error rate 1.7% vs SLO threshold 0.5%",
+    "details": {
+     "error_rate": 0.017,
+     "threshold": 0.005
+    }
+   },
+   {
+    "code": "LATENCY_SLO",
+    "severity": "medium",
+    "message": "p99 latency 59 ms vs SLO 20 ms",
+    "details": {
+     "p99_ms": 59,
+     "slo_ms": 20
+    }
+   }
+  ],
+  "severity": "SEV3",
+  "action": "scale",
+  "cause": "flash-sale-capacity",
+  "note": "Friday flash sale traffic. Scaled session-cache from 6 to 9 shards; evictions stopped in 5 min. Pre-scaling before sales is on the capacity plan (CAP-9).",
+  "mttr_min": 25
+ }
+]
